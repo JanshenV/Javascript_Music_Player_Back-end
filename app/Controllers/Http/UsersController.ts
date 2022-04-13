@@ -1,4 +1,5 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
+import Hash from '@ioc:Adonis/Core/Hash'
 
 //Model
 import User from 'App/Models/User';
@@ -12,7 +13,9 @@ export default class UsersController {
         try {
             const allUsers = await User.all();
 
-            return { allUsers }
+            return response.status(200).json({
+                allUsers
+            });
         } catch (error) {
             return response.badRequest(error);
         };
@@ -53,8 +56,9 @@ export default class UsersController {
                 message: 'User not found.'
             });
 
-            return { user };
-
+            return response.status(200).json({
+                user
+            });
         } catch (error) {
             return response.badRequest(error);
         };
@@ -105,6 +109,39 @@ export default class UsersController {
                 user: userUpdated
             });
 
+        } catch (error) {
+            return response.badRequest(error);
+        };
+    };
+
+    public async destroy({ params, request, response }: HttpContextContract) {
+        const { id } = params;
+        const { password } = request.body();
+
+        try {
+            if (!id) return response.badRequest({
+                message: 'User not found.'
+            });
+
+            const user = await User.findBy('id', id);
+            if (!user) return response.badRequest({
+                message: 'User not found.'
+            });
+
+            if (!password) return response.badRequest({
+                message: 'Invalid password.'
+            });
+
+            const passwordCompare = await Hash.verify(user.password, password);
+            if (!passwordCompare) return response.badRequest({
+                message: 'Invalid password.'
+            });
+
+            await user.delete();
+
+            return response.status(200).json({
+                message: 'User deleted successfully.'
+            });
         } catch (error) {
             return response.badRequest(error);
         };
