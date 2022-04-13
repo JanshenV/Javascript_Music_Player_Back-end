@@ -9,7 +9,9 @@ export default class LoginController {
         try {
             await request.validate(UserLoginValidator);
 
-            const token = await auth.use('api').attempt(email, password);
+            const token = await auth.use('api').attempt(email, password, {
+                expiresIn: '1m'
+            });
 
             return response.status(200).json({
                 token
