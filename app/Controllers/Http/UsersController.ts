@@ -10,4 +10,25 @@ export default class UsersController {
             return response.badRequest(error);
         };
     };
+
+    public async store({ request, response }: HttpContextContract) {
+        const { username, email, password } = request.body();
+
+        try {
+
+
+            await User.create({
+                username,
+                email,
+                password
+            });
+
+            return response.status(201).json({
+                message: 'User created.'
+            });
+
+        } catch (error) {
+            return response.badRequest(error);
+        };
+    };
 };
