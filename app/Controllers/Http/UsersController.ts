@@ -1,5 +1,12 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
+
+//Model
 import User from 'App/Models/User';
+
+//Validators
+import CreateUserValidator from 'App/Validators/CreateUserValidator';
+
+
 export default class UsersController {
     public async index({ response }: HttpContextContract) {
         try {
@@ -15,7 +22,12 @@ export default class UsersController {
         const { username, email, password } = request.body();
 
         try {
+            await request.validate(CreateUserValidator);
 
+            const existingEmail = await User.findBy('email', email);
+            if (existingEmail) return response.badRequest({
+                message: 'Email already in use.'
+            });
 
             await User.create({
                 username,
