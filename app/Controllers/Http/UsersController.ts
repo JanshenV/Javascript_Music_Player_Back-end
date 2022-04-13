@@ -43,4 +43,20 @@ export default class UsersController {
             return response.badRequest(error);
         };
     };
+
+    public async show({ params, response }: HttpContextContract) {
+        const { id } = params;
+
+        try {
+            const user = await User.findBy('id', id);
+            if (!user) return response.badRequest({
+                message: 'User not found.'
+            });
+
+            return { user };
+
+        } catch (error) {
+            return response.badRequest(error);
+        };
+    };
 };
