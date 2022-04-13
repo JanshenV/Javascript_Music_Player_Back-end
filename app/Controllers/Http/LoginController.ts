@@ -10,7 +10,9 @@ export default class LoginController {
         try {
             const token = await auth.use('api').attempt(email, password);
 
-            return token
+            return response.status(200).json{
+                token
+            };
         } catch (error) {
             return response.badRequest(error);
         };
