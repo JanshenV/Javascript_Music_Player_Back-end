@@ -35,3 +35,5 @@ Route.group(() => {
   Route.delete('/users/:id', 'UsersController.destroy');
 
 }).middleware('auth');
+
+Route.get('/users/verify/:token', 'LoginController.verifyEmail');

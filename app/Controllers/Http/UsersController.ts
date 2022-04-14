@@ -3,6 +3,7 @@ import Hash from '@ioc:Adonis/Core/Hash'
 
 //Model
 import User from 'App/Models/User';
+import VerifyEmailToken from 'App/Models/VerifyEmailToken';
 
 //Validators
 import CreateUserValidator from 'App/Validators/CreateUserValidator';
@@ -38,11 +39,28 @@ export default class UsersController {
             const newUser = await User.create({
                 username,
                 email,
-                password
+                password,
+                verified: false
             });
 
             if (!newUser) return response.badRequest({
                 message: 'Something went wrong.'
+            });
+
+            function generateToken(n: number) {
+                const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let authToken = '';
+                for (var i = 0; i < n; i++) {
+                    authToken += chars[Math.floor(Math.random() * chars.length)];
+                };
+                return { authToken };
+            };
+
+            const { authToken } = generateToken(27);
+
+            await VerifyEmailToken.create({
+                token: String(authToken),
+                user_id: newUser.id
             });
 
             await Mail.send(message => {
@@ -53,10 +71,9 @@ export default class UsersController {
                     .htmlView('emails/welcome', {
                         username,
                         email,
-                        link: 'https://www.google.com.br/'
+                        link: `http://127.0.0.1:3333/users/verify/${authToken}`
                     })
             });
-
 
             return response.created({
                 message: 'User created.'
