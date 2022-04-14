@@ -24,7 +24,8 @@
     "@japa/preset-adonis/TestsProvider",
     "@adonisjs/lucid",
     "@adonisjs/auth",
-    "@adonisjs/mail"
+    "@adonisjs/mail",
+    "@adonisjs/view"
   ],
   "aceProviders": [
     "@adonisjs/repl"
@@ -39,5 +40,11 @@
         "timeout": 60000
       }
     ]
-  }
+  },
+  "metaFiles": [
+    {
+      "pattern": "resources/views/**/*.edge",
+      "reloadServer": false
+    }
+  ]
 }

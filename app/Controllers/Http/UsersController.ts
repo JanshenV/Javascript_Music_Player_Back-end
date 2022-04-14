@@ -50,11 +50,11 @@ export default class UsersController {
                     .from('AdonisHere@back-end.com')
                     .to(email)
                     .subject('Welcomido')
-                // .htmlView('emails/welcome', { name: username })
+                    .htmlView('emails/welcome', { username })
             });
 
 
-            return response.status(201).json({
+            return response.created({
                 message: 'User created.'
             });
 
