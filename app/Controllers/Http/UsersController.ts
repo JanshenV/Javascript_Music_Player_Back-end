@@ -8,6 +8,9 @@ import User from 'App/Models/User';
 import CreateUserValidator from 'App/Validators/CreateUserValidator';
 import UpdateUserValidator from 'App/Validators/UpdateUserValidator';
 
+//Mailer Service
+import Mail from '@ioc:Adonis/Addons/Mail';
+
 export default class UsersController {
     public async index({ response }: HttpContextContract) {
         try {
@@ -32,11 +35,24 @@ export default class UsersController {
                 message: 'Email already in use.'
             });
 
-            await User.create({
+            const newUser = await User.create({
                 username,
                 email,
                 password
             });
+
+            if (!newUser) return response.badRequest({
+                message: 'Something went wrong.'
+            });
+
+            await Mail.send(message => {
+                message
+                    .from('AdonisHere@back-end.com')
+                    .to(email)
+                    .subject('Welcomido')
+                // .htmlView('emails/welcome', { name: username })
+            });
+
 
             return response.status(201).json({
                 message: 'User created.'
