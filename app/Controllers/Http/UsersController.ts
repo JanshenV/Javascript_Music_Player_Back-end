@@ -50,7 +50,11 @@ export default class UsersController {
                     .from('AdonisHere@back-end.com')
                     .to(email)
                     .subject('Welcomido')
-                    .htmlView('emails/welcome', { username })
+                    .htmlView('emails/welcome', {
+                        username,
+                        email,
+                        link: 'https://www.google.com.br/'
+                    })
             });
 
 
