@@ -14,7 +14,6 @@ export default class LoginController {
             await request.validate(UserLoginValidator);
 
             const user = await User.findBy('email', email);
-
             if (!user || !user.verified) {
                 return response.badRequest({
                     message: 'User not found or email has not been verified. You can activate your account using the link sent to your email.'
@@ -40,7 +39,7 @@ export default class LoginController {
             const userToken = await VerifyEmailToken
                 .query()
                 .where({ token })
-                .first()
+                .first();
 
             if (!userToken) return response.badRequest({
                 message: 'Bad link. You should be looking for Zelda in another castle.'
