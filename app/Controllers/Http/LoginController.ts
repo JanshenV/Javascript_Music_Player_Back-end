@@ -24,6 +24,7 @@ export default class LoginController {
                 expiresIn: '8h'
             });
 
+
             return response.status(200).json({
                 token
             });
