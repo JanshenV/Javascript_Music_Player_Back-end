@@ -16,7 +16,7 @@ export default class LoginController {
             const user = await User.findBy('email', email);
             if (!user || !user.verified) {
                 return response.badRequest({
-                    message: 'User not found or email has not been verified. You can activate your account using the link sent to your email.'
+                    message: 'User not found or email has not been verified.'
                 });
             };
 
